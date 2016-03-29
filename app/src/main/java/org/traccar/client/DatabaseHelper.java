@@ -79,7 +79,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "altitude REAL," +
                 "speed REAL," +
                 "course REAL," +
-                "battery REAL)");
+                "battery REAL," +
+                "sim TEXT," +
+                "signal INTEGER)");
     }
 
     @Override
@@ -98,6 +100,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("speed", position.getSpeed());
         values.put("course", position.getCourse());
         values.put("battery", position.getBattery());
+        values.put("sim", position.getSimOperator());
+        values.put("signal", position.getSignalStrength());
 
         db.insertOrThrow("position", null, values);
     }
@@ -130,6 +134,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 position.setSpeed(cursor.getDouble(cursor.getColumnIndex("speed")));
                 position.setCourse(cursor.getDouble(cursor.getColumnIndex("course")));
                 position.setBattery(cursor.getDouble(cursor.getColumnIndex("battery")));
+                position.setSimOperator(cursor.getString(cursor.getColumnIndex("sim")));
+                position.setBattery(cursor.getInt(cursor.getColumnIndex("signal")));
 
             } else {
                 return null;
@@ -151,7 +157,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void deletePosition(long id) {
-        if (db.delete("position", "id = ?", new String[] { String.valueOf(id) }) != 1) {
+        if (db.delete("position", "id = ?", new String[]{String.valueOf(id)}) != 1) {
             throw new SQLException();
         }
     }

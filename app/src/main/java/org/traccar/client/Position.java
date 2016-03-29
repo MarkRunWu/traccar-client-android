@@ -24,8 +24,10 @@ public class Position {
     public Position() {
     }
 
-    public Position(String deviceId, Location location, double battery) {
+    public Position(String deviceId, Location location, double battery, String netwrokType, int signalStrength) {
         this.deviceId = deviceId;
+        this.simOperator = netwrokType;
+        this.signalStrength = signalStrength;
         time = new Date(location.getTime());
         latitude = location.getLatitude();
         longitude = location.getLongitude();
@@ -40,6 +42,7 @@ public class Position {
     public void setId(long id) { this.id = id; }
 
     private String deviceId;
+
     public String getDeviceId() { return deviceId; }
     public void setDeviceId(String deviceId) { this.deviceId = deviceId; }
 
@@ -71,4 +74,21 @@ public class Position {
     public double getBattery() { return battery; }
     public void setBattery(double battery) { this.battery = battery; }
 
+    private String simOperator;
+    public String getSimOperator() {
+        return simOperator;
+    }
+    public void setSimOperator(String simOperator) {
+        this.simOperator = simOperator;
+    }
+
+    private int signalStrength;
+
+    public int getSignalStrength() {
+        return signalStrength;
+    }
+
+    public void setSignalStrength(int signalStrength) {
+        this.signalStrength = signalStrength;
+    }
 }

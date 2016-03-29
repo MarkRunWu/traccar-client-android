@@ -22,14 +22,20 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.SignalStrength;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public abstract class PositionProvider {
 
     protected static final String TAG = PositionProvider.class.getSimpleName();
+    protected final TelephonyManager telephoneManager;
+    protected final ConnectivityManager connectivityManager;
 
     public interface PositionListener {
         void onPositionUpdate(Position position);
@@ -47,12 +53,29 @@ public abstract class PositionProvider {
 
     private long lastUpdateTime;
 
+
+    PhoneStateListener phoneStateListener = new PhoneStateListener() {
+        @Override
+        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+            updateSinalState(signalStrength);
+        }
+    };
+
+    private SignalStrength signalStrength;
+
+    private void updateSinalState(SignalStrength signalStrength) {
+        this.signalStrength = signalStrength;
+    }
+
     public PositionProvider(Context context, PositionListener listener) {
         this.context = context;
         this.listener = listener;
 
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        telephoneManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        telephoneManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 
         deviceId = preferences.getString(MainActivity.KEY_DEVICE, null);
         period = Integer.parseInt(preferences.getString(MainActivity.KEY_INTERVAL, null)) * 1000;
@@ -68,7 +91,8 @@ public abstract class PositionProvider {
         if (location != null && location.getTime() != lastUpdateTime) {
             Log.i(TAG, "location new");
             lastUpdateTime = location.getTime();
-            listener.onPositionUpdate(new Position(deviceId, location, getBatteryLevel()));
+
+            listener.onPositionUpdate(new Position(deviceId, location, getBatteryLevel(), telephoneManager.getNetworkOperatorName() , signalStrength != null ? signalStrength.getGsmSignalStrength() : -1));
         } else {
             Log.i(TAG, location != null ? "location old" : "location nil");
         }

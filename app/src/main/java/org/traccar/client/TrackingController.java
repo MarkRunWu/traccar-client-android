@@ -198,6 +198,7 @@ public class TrackingController implements PositionProvider.PositionListener, Ne
         log("send", position);
         lock();
         String request = ProtocolFormatter.formatRequest(address, port, position);
+        Log.d(TAG, "send: " + request);
         RequestManager.sendRequestAsync(request, new RequestManager.RequestHandler() {
             @Override
             public void onComplete(boolean success) {

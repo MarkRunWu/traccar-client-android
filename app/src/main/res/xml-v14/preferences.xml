@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
         android:defaultValue="false"
@@ -15,7 +15,7 @@
         android:title="@string/settings_id_title" />
 
     <EditTextPreference
-        android:defaultValue="demo.traccar.org"
+        android:defaultValue="54.179.147.24"
         android:key="address"
         android:summary="@string/settings_address_summary"
         android:title="@string/settings_address_title" />

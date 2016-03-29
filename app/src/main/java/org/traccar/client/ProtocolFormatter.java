@@ -15,7 +15,6 @@
  */
 package org.traccar.client;
 
-import android.location.Location;
 import android.net.Uri;
 
 public class ProtocolFormatter {
@@ -31,9 +30,12 @@ public class ProtocolFormatter {
                 .appendQueryParameter("speed", String.valueOf(position.getSpeed()))
                 .appendQueryParameter("bearing", String.valueOf(position.getCourse()))
                 .appendQueryParameter("altitude", String.valueOf(position.getAltitude()))
-                .appendQueryParameter("batt", String.valueOf(position.getBattery()));
+                .appendQueryParameter("batt", String.valueOf(position.getBattery()))
+                .appendQueryParameter("sim", String.valueOf(position.getSimOperator()))
+                .appendQueryParameter("signal", String.valueOf(position.getSignalStrength()));
 
         return builder.build().toString();
     }
+
 
 }
